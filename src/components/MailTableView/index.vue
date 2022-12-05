@@ -1,6 +1,18 @@
 <template>
   <div v-if="loading">Loading ...</div>
   <div v-else>
+    <div class="d-flex">
+      <div style="padding: 5px">
+        <input type="checkbox" />
+      </div>
+
+      <div>
+        <button>Mark Read</button>
+        <button>Mark Unread</button>
+        <button>Archive</button>
+      </div>
+    </div>
+
     <table class="mail-table">
       <tbody>
         <tr v-for="email in items" :key="email.id" :class="[email.read ? 'read' : '']">
@@ -35,15 +47,6 @@
     </table>
 
     <ModalView v-if="openedEmail" @closeModal="closeModal">
-      <!-- <MailView
-        :item="openedEmail"
-        @closeModal="closeModal"
-        :isNewest="isNewest"
-        :isOldest="isOldest"
-        @goNewer="goNewer"
-        @goOlder="goOlder"
-      /> -->
-
       <MailView
         :item="openedEmail"
         :isNewest="isNewest"

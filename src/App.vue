@@ -1,7 +1,9 @@
 <template>
-  <h1>VMail Inbox</h1>
+  <div class="container">
+    <h1>VMail Inbox</h1>
 
-  <MailTableView :items="unarchivedEmails" :loading="loading" />
+    <MailTableView :items="unarchivedEmails" :loading="loading" />
+  </div>
 </template>
 
 <script>
@@ -144,10 +146,11 @@ input[type="checkbox"]:checked {
 }
 
 /* Mail Table */
-
-.mail-table {
+.container {
   max-width: 1000px;
   margin: auto;
+}
+.mail-table {
   border-collapse: collapse;
 }
 .mail-table tr.read {
@@ -191,5 +194,11 @@ input[type="checkbox"]:checked {
 .bulk-action-bar .checkbox {
   margin-right: 6px;
   margin-left: 3px;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 </style>
