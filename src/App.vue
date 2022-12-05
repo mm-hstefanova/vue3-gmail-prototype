@@ -1,17 +1,20 @@
 <template>
   <h1>VMail Inbox</h1>
 
-  <MailTable :items="unarchivedEmails" :loading="loading" />
+  <MailTableView :items="unarchivedEmails" :loading="loading" />
 </template>
 
 <script>
-import MailTable from "./components/MailTable";
+/**
+ * Home page / main logic
+ */
+import MailTableView from "./components/MailTableView";
 import axios from "axios";
 
 export default {
   name: "App",
   components: {
-    MailTable
+    MailTableView
   },
   data() {
     return {
@@ -35,7 +38,7 @@ export default {
       this.loading = true;
 
       let response = axios
-        .get("https://api.jsonbin.io/v3/qs/6387787aa3c728450edba3a7")
+        .get("https://api.jsonbin.io/v3/qs/638dce25afa3911d13dfc6de")
         .then(res => (this.emails = res.data.record.emails));
       console.log(response);
       this.loading = false;
@@ -69,6 +72,7 @@ button {
 
 button:disabled {
   cursor: auto;
+  opacity: 0.7;
 }
 
 button.selected {

@@ -1,6 +1,6 @@
 <template>
-  <div class="modal">
-    <div class="overlay" @click="$emit('closeModal')"></div>
+  <div class="modal" @closeModal="closeModal">
+    <div class="overlay" @click="closeModal"></div>
     <div class="modal-card">
       <slot />
     </div>
@@ -8,9 +8,18 @@
 </template>
 
 <script>
+import { onBeforeUnmount } from "vue";
+import { useKeyDown } from "../../composables";
+
 export default {
-  setup(props) {
-    return {};
+  setup(props, { emit }) {
+    const closeModal = event => emit("closeModal");
+
+    useKeyDown([{ key: "Escape", fn: closeModal }]);
+
+    return {
+      closeModal
+    };
   }
 };
 </script>
