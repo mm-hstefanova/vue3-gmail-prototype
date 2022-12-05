@@ -1,23 +1,51 @@
 <template>
-  <div id="app">      
-    <Suspense>
-      <template #default>
-        <MailScreen />
-      </template>
-      <template #fallback>
-        Loading...
-      </template>
-    </Suspense>
-  </div>
+  <h1>VMail Inbox</h1>
+
+  <MailTableView :items="unarchivedEmails" :loading="loading" />
 </template>
 
 <script>
-import MailScreen from '@/components/MailScreen.vue';
+/**
+ * Home page / main logic
+ */
+import MailTableView from "./components/MailTableView";
+import axios from "axios";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    MailScreen
+    MailTableView
+  },
+  data() {
+    return {
+      emails: [],
+      loading: false
+    };
+  },
+  computed: {
+    sortedEmails() {
+      return this.emails.sort((a, b) => {
+        return a.sentAt < b.sentAt ? 1 : -1;
+      });
+    },
+    unarchivedEmails() {
+      return this.sortedEmails.filter(email => !email.archived);
+    }
+  },
+  methods: {
+    async getData() {
+      // use github as externl resource
+      this.loading = true;
+
+      let response = axios
+        .get("https://api.jsonbin.io/v3/qs/638dce25afa3911d13dfc6de")
+        .then(res => (this.emails = res.data.record.emails));
+      console.log(response);
+      this.loading = false;
+    }
+  },
+  mounted() {
+    this.getData();
   }
 };
 </script>
@@ -44,6 +72,7 @@ button {
 
 button:disabled {
   cursor: auto;
+  opacity: 0.7;
 }
 
 button.selected {
@@ -57,12 +86,12 @@ button.selected {
   cursor: pointer;
 }
 
-input[type='checkbox'] {
-  -webkit-appearance:none;
+input[type="checkbox"] {
+  -webkit-appearance: none;
   cursor: pointer;
-  width:24px;
-  height:24px;
-  background:white;
+  width: 24px;
+  height: 24px;
+  background: white;
   border-radius: 2px;
   border: 1px solid #555;
   position: relative;
@@ -70,11 +99,11 @@ input[type='checkbox'] {
   padding: 10px;
 }
 
-input[type='checkbox'].partial-check {
-  background: #ABC;
+input[type="checkbox"].partial-check {
+  background: #abc;
 }
 
-input[type='checkbox']:checked {
+input[type="checkbox"]:checked {
   background: #679;
 }
 
@@ -84,7 +113,8 @@ input[type='checkbox']:checked {
 
 /* Modal */
 
-.modal, .overlay {
+.modal,
+.overlay {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -121,7 +151,7 @@ input[type='checkbox']:checked {
   border-collapse: collapse;
 }
 .mail-table tr.read {
-  background-color: #EEE;
+  background-color: #eee;
 }
 .mail-table tr {
   height: 40px;
