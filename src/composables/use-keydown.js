@@ -12,3 +12,5 @@ export const useKeyDown = keyCombos => {
   window.addEventListener("keydown", onKeyDown);
   onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
 };
+
+export default useKeyDown;

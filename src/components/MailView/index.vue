@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { useKeyDown } from "../../composables";
+import useKeyDown from "@/composables/use-keydown";
 
 export default {
   props: {

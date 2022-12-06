@@ -9,7 +9,7 @@
 
 <script>
 import { onBeforeUnmount } from "vue";
-import { useKeyDown } from "../../composables";
+import useKeyDown from "@/composables/use-keydown";
 
 export default {
   setup(props, { emit }) {

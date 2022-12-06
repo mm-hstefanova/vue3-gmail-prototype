@@ -1,15 +1,16 @@
 <template>
   <div v-if="loading">Loading ...</div>
   <div v-else>
+    <h3>Selected emails: {{ emailSelection.emails.size }}</h3>
     <div class="d-flex">
       <div style="padding: 5px">
         <input type="checkbox" />
       </div>
 
       <div>
-        <button>Mark Read</button>
-        <button>Mark Unread</button>
-        <button>Archive</button>
+        <button @click="markRead">Mark Read</button>
+        <button @click="markUnread">Mark Unread</button>
+        <button @click="markArchive">Archive</button>
       </div>
     </div>
 
@@ -20,8 +21,8 @@
             <input
               tabindex="0"
               type="checkbox"
-              v-model="email.read"
-              @click="email.read = !email.read"
+              :selected="emailSelection.emails.has(email)"
+              @click="emailSelection.toggle(email)"
             />
           </td>
 
@@ -59,9 +60,10 @@
 
 <script>
 import { format } from "date-fns";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, reactive } from "vue";
 import MailView from "../MailView";
 import ModalView from "../ModalView";
+import useEmailSelection from "@/composables/use-email-selection";
 
 export default {
   props: {
@@ -79,6 +81,10 @@ export default {
     ModalView
   },
   setup(props) {
+    /**
+     * Single Email Actions
+     * */
+
     const isNewest = ref(false);
     const isOldest = ref(false);
 
@@ -161,6 +167,10 @@ export default {
       }
     );
 
+    /**
+     * Multiselect logic
+     **/
+
     return {
       format,
       openedEmail,
@@ -169,7 +179,8 @@ export default {
       isOldest,
       changeEmail,
       updateEmail,
-      closeModal
+      closeModal,
+      emailSelection: useEmailSelection()
     };
   }
 };

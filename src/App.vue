@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <h1>VMail Inbox</h1>
+    <h4>Selected emails: {{ emailSelection.emails.size }}</h4>
 
     <MailTableView :items="unarchivedEmails" :loading="loading" />
   </div>
@@ -12,11 +13,15 @@
  */
 import MailTableView from "./components/MailTableView";
 import axios from "axios";
+import useEmailSelection from "./composables/use-email-selection";
 
 export default {
   name: "App",
   components: {
     MailTableView
+  },
+  setup() {
+    return { emailSelection: useEmailSelection() };
   },
   data() {
     return {
