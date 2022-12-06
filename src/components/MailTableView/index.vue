@@ -1,16 +1,21 @@
 <template>
   <div v-if="loading">Loading ...</div>
   <div v-else>
+    <BulkActionBar :emails="items" />
+
     <h3>Selected emails: {{ emailSelection.emails.size }}</h3>
+
     <div class="d-flex">
       <div style="padding: 5px">
-        <input type="checkbox" />
+        <input type="checkbox" v-model="allEmailsSelected" />
       </div>
 
       <div>
-        <button @click="markRead">Mark Read</button>
-        <button @click="markUnread">Mark Unread</button>
-        <button @click="markArchive">Archive</button>
+        <button @click="markRead" :disabled="noneSelected || !isUnread">
+          Mark Read
+        </button>
+        <button @click="markUnread" :disabled="noneSelected || hasRead">Mark Unread</button>
+        <button @click="markArchive" :disabled="noneSelected">Archive</button>
       </div>
     </div>
 
@@ -23,7 +28,10 @@
               type="checkbox"
               :selected="emailSelection.emails.has(email)"
               @click="emailSelection.toggle(email)"
+              :class="[emailSelection.emails.has(email) ? 'selected' : '']"
             />
+
+            <span>read: {{ emailSelection.wasRead }}</span>
           </td>
 
           <td>
@@ -47,6 +55,9 @@
       </tbody>
     </table>
 
+    <div>has read: {{ hasRead }}</div>
+    <div>has unread: {{ isUnread }}</div>
+
     <ModalView v-if="openedEmail" @closeModal="closeModal">
       <MailView
         :item="openedEmail"
@@ -63,6 +74,7 @@ import { format } from "date-fns";
 import { ref, computed, watch, reactive } from "vue";
 import MailView from "../MailView";
 import ModalView from "../ModalView";
+import BulkActionBar from "../BulkActionBar";
 import useEmailSelection from "@/composables/use-email-selection";
 
 export default {
@@ -78,7 +90,8 @@ export default {
   },
   components: {
     MailView,
-    ModalView
+    ModalView,
+    BulkActionBar
   },
   setup(props) {
     /**
@@ -95,7 +108,7 @@ export default {
 
     function openModal(email) {
       email.read = true;
-      // update in db - it's read
+      // update in db
       updateEmail(email);
 
       openedEmail.value = email;
@@ -170,6 +183,52 @@ export default {
     /**
      * Multiselect logic
      **/
+    const noneSelected = computed(() => !emailSelection.emails.size);
+    const emailSelection = useEmailSelection();
+    const allEmailsSelected = ref(false);
+    const someEmailsSelected = ref([...emailSelection.emails]);
+    // TODO:
+    // DISABLE THE BUTTONS DEPENDING ON SELECTED EMAIL - READ / UNREAD
+    const isUnread = computed(() => someEmailsSelected.value.some(email => !email.read));
+    const hasRead = computed(() => someEmailsSelected.value.some(email => email.read));
+    // END TODO
+    const markRead = () => {
+      return emailSelection.emails.forEach(email => {
+        email.read = true;
+        return email;
+      });
+    };
+
+    const isMarkReadDisabled = ref(false);
+
+    const markUnread = () => {
+      return emailSelection.emails.forEach(email => {
+        email.read = false;
+        return email;
+      });
+    };
+
+    const markArchive = () => {
+      return emailSelection.emails.forEach(email => {
+        email.archived = true;
+        return email;
+      });
+    };
+
+    // select all
+    watch(
+      () => allEmailsSelected.value,
+      value => {
+        if (value) {
+          props.items.forEach(email => {
+            emailSelection.emails.add(email);
+            return email;
+          });
+        } else {
+          emailSelection.emails.clear();
+        }
+      }
+    );
 
     return {
       format,
@@ -180,7 +239,15 @@ export default {
       changeEmail,
       updateEmail,
       closeModal,
-      emailSelection: useEmailSelection()
+      allEmailsSelected,
+      noneSelected,
+      emailSelection,
+      markRead,
+      markUnread,
+      markArchive,
+      someEmailsSelected,
+      hasRead,
+      isUnread
     };
   }
 };

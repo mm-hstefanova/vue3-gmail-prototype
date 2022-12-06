@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <h1>VMail Inbox</h1>
-    <h4>Selected emails: {{ emailSelection.emails.size }}</h4>
 
     <MailTableView :items="unarchivedEmails" :loading="loading" />
   </div>
@@ -45,7 +44,7 @@ export default {
       this.loading = true;
 
       let response = axios
-        .get("https://api.jsonbin.io/v3/qs/638dce25afa3911d13dfc6de")
+        .get("https://api.jsonbin.io/v3/qs/638f40aec5b3a64f1bc542ab")
         .then(res => (this.emails = res.data.record.emails));
       console.log(response);
       this.loading = false;
@@ -110,6 +109,7 @@ input[type="checkbox"].partial-check {
   background: #abc;
 }
 
+input[type="checkbox"].selected,
 input[type="checkbox"]:checked {
   background: #679;
 }

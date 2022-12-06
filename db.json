@@ -35,6 +35,15 @@
       "sentAt": "2020-03-24T18:25:43.511Z",
       "archived": true,
       "read": true
+    },
+    {
+      "id": 5,
+      "from": "jeffryanthony@vuejsdevelopers.com",
+      "subject": "'Jeffry Lorem ipsum dolor sit amet ' + 6 more must-read articles from this week",
+      "body": "Newsletter Issue #162",
+      "sentAt": "2020-03-24T18:25:43.511Z",
+      "archived": false,
+      "read": true
     }
   ]
 }
