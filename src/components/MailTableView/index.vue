@@ -1,37 +1,21 @@
 <template>
   <div v-if="loading">Loading ...</div>
   <div v-else>
-    <BulkActionBar :emails="items" />
+    <h3>{{ emailSelection.emails.size }} of {{ emails.length }} emails selected</h3>
 
-    <h3>Selected emails: {{ emailSelection.emails.size }}</h3>
-
-    <div class="d-flex">
-      <div style="padding: 5px">
-        <input type="checkbox" v-model="allEmailsSelected" />
-      </div>
-
-      <div>
-        <button @click="markRead" :disabled="noneSelected || !isUnread">
-          Mark Read
-        </button>
-        <button @click="markUnread" :disabled="noneSelected || hasRead">Mark Unread</button>
-        <button @click="markArchive" :disabled="noneSelected">Archive</button>
-      </div>
-    </div>
+    <BulkActionBar :emails="emails" />
 
     <table class="mail-table">
       <tbody>
-        <tr v-for="email in items" :key="email.id" :class="[email.read ? 'read' : '']">
+        <tr v-for="email in emails" :key="email.id" :class="[email.read ? 'read' : '']">
           <td>
             <input
               tabindex="0"
               type="checkbox"
-              :selected="emailSelection.emails.has(email)"
+              :checked="emailSelection.emails.has(email)"
               @click="emailSelection.toggle(email)"
               :class="[emailSelection.emails.has(email) ? 'selected' : '']"
             />
-
-            <span>read: {{ emailSelection.wasRead }}</span>
           </td>
 
           <td>
@@ -55,9 +39,6 @@
       </tbody>
     </table>
 
-    <div>has read: {{ hasRead }}</div>
-    <div>has unread: {{ isUnread }}</div>
-
     <ModalView v-if="openedEmail" @closeModal="closeModal">
       <MailView
         :item="openedEmail"
@@ -79,7 +60,7 @@ import useEmailSelection from "@/composables/use-email-selection";
 
 export default {
   props: {
-    items: {
+    emails: {
       type: Array,
       default: () => []
     },
@@ -94,6 +75,8 @@ export default {
     BulkActionBar
   },
   setup(props) {
+    const emailSelection = useEmailSelection();
+
     /**
      * Single Email Actions
      * */
@@ -103,7 +86,7 @@ export default {
 
     const openedEmail = ref(null);
     const openedEmailIndex = computed(() =>
-      props.items.findIndex(item => item.id === openedEmail.value?.id)
+      props.emails.findIndex(item => item.id === openedEmail.value?.id)
     );
 
     function openModal(email) {
@@ -126,12 +109,12 @@ export default {
 
     function showNewerEmail() {
       if (isOldest.value) isOldest.value = false;
-      openedEmail.value = props.items[openedEmailIndex.value - 1];
+      openedEmail.value = props.emails[openedEmailIndex.value - 1];
     }
 
     function showOlderEmail() {
       if (isNewest.value) isNewest.value = false;
-      openedEmail.value = props.items[openedEmailIndex.value + 1];
+      openedEmail.value = props.emails[openedEmailIndex.value + 1];
     }
 
     function changeEmail({ toggleRead, toggleArchive, save, closeModal, goNewer, goOlder }) {
@@ -174,58 +157,8 @@ export default {
           return;
         }
 
-        if (value == props.items.length - 1) {
+        if (value == props.emails.length - 1) {
           isOldest.value = true;
-        }
-      }
-    );
-
-    /**
-     * Multiselect logic
-     **/
-    const noneSelected = computed(() => !emailSelection.emails.size);
-    const emailSelection = useEmailSelection();
-    const allEmailsSelected = ref(false);
-    const someEmailsSelected = ref([...emailSelection.emails]);
-    // TODO:
-    // DISABLE THE BUTTONS DEPENDING ON SELECTED EMAIL - READ / UNREAD
-    const isUnread = computed(() => someEmailsSelected.value.some(email => !email.read));
-    const hasRead = computed(() => someEmailsSelected.value.some(email => email.read));
-    // END TODO
-    const markRead = () => {
-      return emailSelection.emails.forEach(email => {
-        email.read = true;
-        return email;
-      });
-    };
-
-    const isMarkReadDisabled = ref(false);
-
-    const markUnread = () => {
-      return emailSelection.emails.forEach(email => {
-        email.read = false;
-        return email;
-      });
-    };
-
-    const markArchive = () => {
-      return emailSelection.emails.forEach(email => {
-        email.archived = true;
-        return email;
-      });
-    };
-
-    // select all
-    watch(
-      () => allEmailsSelected.value,
-      value => {
-        if (value) {
-          props.items.forEach(email => {
-            emailSelection.emails.add(email);
-            return email;
-          });
-        } else {
-          emailSelection.emails.clear();
         }
       }
     );
@@ -239,15 +172,7 @@ export default {
       changeEmail,
       updateEmail,
       closeModal,
-      allEmailsSelected,
-      noneSelected,
-      emailSelection,
-      markRead,
-      markUnread,
-      markArchive,
-      someEmailsSelected,
-      hasRead,
-      isUnread
+      emailSelection
     };
   }
 };
