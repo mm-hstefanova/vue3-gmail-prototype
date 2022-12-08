@@ -1,5 +1,4 @@
 import { reactive, ref, computed } from "vue";
-import { axios } from "axios";
 
 // emails should be outside, otherwise,
 // everytime we use useEmailSelection, a new instance is created

@@ -1,21 +1,21 @@
 <template>
-  <div class="container">
-    <h1>VMail Inbox</h1>
+  <div id="app">
+    <div class="container">
+      <h1>VMail Inbox</h1>
 
-    <MailTableView :emails="sortedEmails" :loading="loading" />
+      <MailTableView :emails="sortedEmails" :loading="loading" />
+    </div>
   </div>
 </template>
 
-<script>
-/**
- * Home page / main logic
- */
-import MailTableView from "./components/MailTableView";
+<script lang="ts">
+import { defineComponent } from 'vue';
+import MailTableView from "./components/MailTableView/index.vue";
 import axios from "axios";
 import useEmailSelection from "./composables/use-email-selection";
 
-export default {
-  name: "App",
+export default defineComponent({
+  name: 'App',
   components: {
     MailTableView
   },
@@ -49,7 +49,7 @@ export default {
   mounted() {
     this.getData();
   }
-};
+});
 </script>
 
 <style>

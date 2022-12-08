@@ -66,9 +66,9 @@
 <script>
 import { format } from "date-fns";
 import { ref, computed, watch, reactive } from "vue";
-import MailView from "../MailView";
-import ModalView from "../ModalView";
-import BulkActionBar from "../BulkActionBar";
+import MailView from "../MailView/index.vue";
+import ModalView from "../ModalView/index.vue";
+import BulkActionBar from "../BulkActionBar/index.vue";
 import useEmailSelection from "@/composables/use-email-selection";
 
 export default {
