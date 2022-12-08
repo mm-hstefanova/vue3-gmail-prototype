@@ -44,6 +44,11 @@ export const useEmailSelection = function() {
     updateEmail(email => (email.archived = true));
     clear();
   };
+
+  const undoArchive = () => {
+    updateEmail(email => (email.archived = false));
+    clear();
+  };
   return {
     emails,
     toggle,
@@ -53,7 +58,8 @@ export const useEmailSelection = function() {
     clear,
     markArchive,
     markRead,
-    markUnread
+    markUnread,
+    undoArchive
   };
 };
 

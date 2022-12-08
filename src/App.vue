@@ -2,7 +2,7 @@
   <div class="container">
     <h1>VMail Inbox</h1>
 
-    <MailTableView :emails="unarchivedEmails" :loading="loading" />
+    <MailTableView :emails="sortedEmails" :loading="loading" />
   </div>
 </template>
 
@@ -33,9 +33,6 @@ export default {
       return this.emails.sort((a, b) => {
         return a.sentAt < b.sentAt ? 1 : -1;
       });
-    },
-    unarchivedEmails() {
-      return this.sortedEmails.filter(email => !email.archived);
     }
   },
   methods: {
@@ -43,7 +40,7 @@ export default {
       this.loading = true;
 
       let response = axios
-        .get("https://api.jsonbin.io/v3/qs/639092da962da34f5389f42d")
+        .get("https://api.jsonbin.io/v3/qs/6391ebf4962da34f538ab0b5")
         .then(res => (this.emails = res.data.record.emails));
       console.log(response);
       this.loading = false;

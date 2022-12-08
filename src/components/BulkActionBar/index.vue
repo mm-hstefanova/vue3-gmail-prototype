@@ -17,8 +17,16 @@
       Mark Unread
     </button>
 
-    <button @click="emailSelection.markArchive" :disabled="noneSelected">
+    <button
+      @click="emailSelection.markArchive"
+      :disabled="noneSelected"
+      v-if="selectedScreen == 'inbox'"
+    >
       Archive
+    </button>
+
+    <button v-else @click="emailSelection.undoArchive" :disabled="noneSelected">
+      Undo Archive
     </button>
   </div>
 </template>
@@ -31,6 +39,10 @@ export default {
     emails: {
       type: Array,
       default: () => []
+    },
+    selectedScreen: {
+      type: String,
+      default: "inbox"
     }
   },
   setup(props) {

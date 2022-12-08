@@ -1,13 +1,21 @@
 <template>
   <div v-if="loading">Loading ...</div>
   <div v-else>
-    <h3>{{ emailSelection.emails.size }} of {{ emails.length }} emails selected</h3>
+    <h3>{{ emailSelection.emails.size }} of {{ filteredEmails.length }} emails selected</h3>
 
-    <BulkActionBar :emails="emails" />
+    <div>
+      <button :disabled="selectedScreen == 'inbox'" @click="selectScreen('inbox')">
+        Inbox
+      </button>
+      <button :disabled="selectedScreen == 'archived'" @click="selectScreen('archived')">
+        Archived
+      </button>
+    </div>
+    <BulkActionBar :emails="filteredEmails" :selectedScreen="selectedScreen" />
 
-    <table class="mail-table">
+    <table class="mail-table" v-if="!!filteredEmails.length">
       <tbody>
-        <tr v-for="email in emails" :key="email.id" :class="[email.read ? 'read' : '']">
+        <tr v-for="email in filteredEmails" :key="email.id" :class="[email.read ? 'read' : '']">
           <td>
             <input
               tabindex="0"
@@ -31,14 +39,19 @@
           </td>
 
           <td>
-            <button @click="email.archived = true">
-              Archive
+            <button
+              @click="
+                selectedScreen == 'inbox' ? (email.archived = true) : (email.archived = false)
+              "
+            >
+              {{ selectedScreen == "inbox" ? "Archive" : "Undo Archive" }}
             </button>
           </td>
         </tr>
       </tbody>
     </table>
 
+    <div v-else>No new or archived emails.</div>
     <ModalView v-if="openedEmail" @closeModal="closeModal">
       <MailView
         :item="openedEmail"
@@ -76,6 +89,24 @@ export default {
   },
   setup(props) {
     const emailSelection = useEmailSelection();
+
+    /**
+     * Switch between screens
+     */
+    const selectedScreen = ref("inbox");
+
+    const selectScreen = newScreen => {
+      // clear the selections from the previous screen
+      emailSelection.emails.clear();
+      selectedScreen.value = newScreen;
+    };
+    const filteredEmails = computed(() => {
+      if (selectedScreen.value == "inbox") {
+        return props.emails.filter(email => !email.archived);
+      } else {
+        return props.emails.filter(email => email.archived);
+      }
+    });
 
     /**
      * Single Email Actions
@@ -172,7 +203,10 @@ export default {
       changeEmail,
       updateEmail,
       closeModal,
-      emailSelection
+      emailSelection,
+      filteredEmails,
+      selectedScreen,
+      selectScreen
     };
   }
 };

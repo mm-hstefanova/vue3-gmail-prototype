@@ -50,31 +50,31 @@ export default {
      * emit one event with different options
      * */
 
-    let toggleRead = () => {
+    const toggleRead = () => {
       emit("changeEmail", { toggleRead: true, save: true });
     };
 
-    let toggleArchive = () => {
+    const toggleArchive = () => {
       emit("changeEmail", { toggleArchive: true, save: true });
     };
 
-    let goNewer = () => {
+    const goNewer = () => {
       emit("changeEmail", { goNewer: true });
     };
 
-    let goOlder = () => {
+    const goOlder = () => {
       emit("changeEmail", { goOlder: true });
     };
 
-    let closeModal = () => {
+    const closeModal = () => {
       emit("changeEmail", { closeModal: true });
     };
 
-    let goNewerAndArchive = () => {
+    const goNewerAndArchive = () => {
       emit("changeEmail", { changeIndex: -1, toggleArchive: true, save: true });
     };
 
-    let goOlderAndArchive = () => {
+    const goOlderAndArchive = () => {
       emit("changeEmail", { changeIndex: 1, toggleArchive: true, save: true });
     };
 
