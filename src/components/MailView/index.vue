@@ -26,13 +26,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import useKeyDown from "@/composables/use-keydown";
+import { defineComponent } from "vue";
+import type { PropType } from 'vue'
+import { Email } from '@/types';
 
-export default {
+export default defineComponent({
   props: {
     item: {
-      type: Object,
+      type: Object as PropType<Email>,
       default: null,
       required: true
     },
@@ -117,5 +120,5 @@ export default {
       closeModal
     };
   }
-};
+});
 </script>

@@ -31,10 +31,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import useEmailSelection from "../../composables/use-email-selection";
-import { ref, computed } from "vue";
-export default {
+import type { Email } from '@/types'
+import { ref, computed, defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     emails: {
       type: Array,
@@ -73,5 +75,5 @@ export default {
       noneSelected
     };
   }
-};
+});
 </script>

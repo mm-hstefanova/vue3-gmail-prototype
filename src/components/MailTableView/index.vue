@@ -63,15 +63,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { format } from "date-fns";
-import { ref, computed, watch, reactive } from "vue";
+import { ref, computed, watch, reactive, defineComponent } from "vue";
 import MailView from "../MailView/index.vue";
 import ModalView from "../ModalView/index.vue";
 import BulkActionBar from "../BulkActionBar/index.vue";
-import useEmailSelection from "@/composables/use-email-selection";
+import useEmailSelection from "../../composables/use-email-selection";
+import type { Email} from '@/types'
 
-export default {
+export default defineComponent({
+  // TODO
   props: {
     emails: {
       type: Array,
@@ -93,18 +95,18 @@ export default {
     /**
      * Switch between screens
      */
-    const selectedScreen = ref("inbox");
+    const selectedScreen = ref<string>("inbox");
 
     const selectScreen = newScreen => {
       // clear the selections from the previous screen
       emailSelection.emails.clear();
       selectedScreen.value = newScreen;
     };
-    const filteredEmails = computed(() => {
+    const filteredEmails = computed(():Email[] => {
       if (selectedScreen.value == "inbox") {
-        return props.emails.filter(email => !email.archived);
+        return props.emails.filter(email:Email => !email.archived);
       } else {
-        return props.emails.filter(email => email.archived);
+        return props.emails.filter(email:Email => email.archived);
       }
     });
 
@@ -209,5 +211,5 @@ export default {
       selectScreen
     };
   }
-};
+});
 </script>
