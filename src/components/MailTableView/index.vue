@@ -63,18 +63,18 @@
 
 <script lang="ts">
 import { format } from "date-fns";
-import { ref, computed, watch, reactive, defineComponent } from "vue";
+import { ref, computed, watch, reactive, defineComponent, PropType } from "vue";
 import MailView from "../MailView/index.vue";
 import ModalView from "../ModalView/index.vue";
 import BulkActionBar from "../BulkActionBar/index.vue";
 import useEmailSelection from "../../composables/use-email-selection";
-import type { Email } from "@/types";
+import type { Email, emailActions, Screen } from "@/types";
 
 export default defineComponent({
   // TODO
   props: {
     emails: {
-      type: Array,
+      type: Array as PropType<Email[]>,
       default: () => [],
     },
     loading: {
@@ -93,14 +93,14 @@ export default defineComponent({
     /**
      * Switch between screens
      */
-    const selectedScreen = ref<string>("inbox");
+    const selectedScreen = ref<Screen>("inbox");
 
-    const selectScreen = (newScreen: string) => {
+    const selectScreen = (newScreen: Screen) => {
       // clear the selections from the previous screen
       emailSelection.emails.clear();
       selectedScreen.value = newScreen;
     };
-    const filteredEmails = computed((): Email[] => {
+    const filteredEmails = computed<Email[]>(() => {
       if (selectedScreen.value == "inbox") {
         return props.emails.filter((email) => !email.archived);
       } else {
@@ -115,12 +115,12 @@ export default defineComponent({
     const isNewest = ref(false);
     const isOldest = ref(false);
 
-    const openedEmail = ref(null);
-    const openedEmailIndex = computed(() =>
+    const openedEmail = ref<Email | null>(null);
+    const openedEmailIndex = computed<number>(() =>
       props.emails.findIndex((item) => item.id === openedEmail.value?.id)
     );
 
-    function openModal(email) {
+    function openModal(email: Email) {
       email.read = true;
       // update in db
       updateEmail(email);
@@ -148,13 +148,20 @@ export default defineComponent({
       openedEmail.value = props.emails[openedEmailIndex.value + 1];
     }
 
-    function changeEmail({ toggleRead, toggleArchive, save, closeModal, goNewer, goOlder }) {
-      if (toggleRead) {
+    function changeEmail({
+      toggleRead,
+      toggleArchive,
+      save,
+      closeModal,
+      goNewer,
+      goOlder,
+    }: emailActions) {
+      if (toggleRead && !!openedEmail.value) {
         openedEmail.value.read = !openedEmail.value.read;
       }
 
-      if (toggleArchive) {
-        openedEmail.value.archive = !openedEmail.value.archive;
+      if (toggleArchive && !!openedEmail.value) {
+        openedEmail.value.archived = !openedEmail.value.archived;
       }
 
       if (goNewer && !isNewest.value) {
@@ -173,7 +180,7 @@ export default defineComponent({
       }
     }
 
-    function updateEmail(email) {
+    function updateEmail(email: Email | null) {
       // axios request to update the current email
       //axios.put('url', email)
     }

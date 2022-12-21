@@ -46,8 +46,11 @@ export default defineComponent({
       this.loading = true;
 
       let response = axios
-        .get("https://api.jsonbin.io/v3/qs/6391ebf4962da34f538ab0b5")
-        .then((res) => (this.emails = res.data.record.emails));
+        .get(
+          "https://mockend.com/mm-hstefanova/vue3-gmail-prototype/tree/updates-with-typescript-support/emails"
+        )
+        .then((res) => (this.emails = res.data));
+
       this.loading = false;
     },
   },
@@ -156,6 +159,7 @@ input[type="checkbox"]:checked {
   margin: auto;
 }
 .mail-table {
+  width: 100%;
   border-collapse: collapse;
 }
 .mail-table tr.read {

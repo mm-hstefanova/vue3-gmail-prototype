@@ -9,11 +9,11 @@
       />
     </div>
 
-    <button @click="emailSelection.markRead" :disabled="emailSelection.allEmailsAreRead">
+    <button @click="emailSelection.markRead" :disabled="emailSelection.allEmailsAreRead.value">
       Mark Read
     </button>
 
-    <button @click="emailSelection.markUnread" :disabled="emailSelection.allEmailsAreUnread">
+    <button @click="emailSelection.markUnread" :disabled="emailSelection.allEmailsAreUnread.value">
       Mark Unread
     </button>
 
@@ -33,19 +33,19 @@
 
 <script lang="ts">
 import useEmailSelection from "../../composables/use-email-selection";
-import type { Email } from '@/types'
-import { ref, computed, defineComponent } from "vue";
+import type { Email } from "@/types";
+import { ref, computed, defineComponent, PropType } from "vue";
 
 export default defineComponent({
   props: {
     emails: {
-      type: Array,
-      default: () => []
+      type: Array as PropType<Email[]>,
+      default: () => [],
     },
     selectedScreen: {
       type: String,
-      default: "inbox"
-    }
+      default: "inbox",
+    },
   },
   setup(props) {
     const emailSelection = useEmailSelection();
@@ -54,7 +54,7 @@ export default defineComponent({
     const numberEmails = computed(() => props.emails.length);
 
     const noneSelected = computed(() => numberSelected.value === 0);
-    const allEmailsSelected = computed(() => numberSelected.value === numberEmails.value);
+    const allEmailsSelected = computed<boolean>(() => numberSelected.value === numberEmails.value);
     const someEmailsSelected = computed(
       () => numberSelected.value > 0 && numberSelected.value < numberEmails.value
     );
@@ -72,8 +72,8 @@ export default defineComponent({
       selectAll,
       someEmailsSelected,
       allEmailsSelected,
-      noneSelected
+      noneSelected,
     };
-  }
+  },
 });
 </script>

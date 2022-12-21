@@ -1,8 +1,9 @@
 import { onBeforeUnmount } from "vue";
+import type { KeyCombination } from "@/types";
 
-export const useKeyDown = keyCombos => {
-  const onKeyDown = event => {
-    let keyCombo = keyCombos.find(kc => kc.key == event.key);
+export const useKeyDown = (keyCombos: KeyCombination[]) => {
+  const onKeyDown = (event: KeyboardEvent) => {
+    let keyCombo = keyCombos.find((kc: KeyCombination) => kc.key == event.key);
 
     if (!!keyCombo) {
       keyCombo.fn();

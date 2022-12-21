@@ -2,7 +2,7 @@
   <div>
     <div>
       <button @click="toggleArchive">
-        {{ item.archive ? "Move to Inbox (e)" : "Archive (e)" }}
+        {{ item.archived ? "Move to Inbox (e)" : "Archive (e)" }}
       </button>
       <button @click="toggleRead">
         {{ item.read ? "Mark Read (r)" : "Mark unread (r)" }}
@@ -21,7 +21,7 @@
     </p>
 
     <div>
-      <button @click="updateEmail">Save Changes</button>
+      <button>Save Changes</button>
     </div>
   </div>
 </template>
@@ -29,24 +29,24 @@
 <script lang="ts">
 import useKeyDown from "@/composables/use-keydown";
 import { defineComponent } from "vue";
-import type { PropType } from 'vue'
-import { Email } from '@/types';
+import type { PropType } from "vue";
+import { Email } from "@/types";
 
 export default defineComponent({
   props: {
     item: {
       type: Object as PropType<Email>,
       default: null,
-      required: true
+      required: true,
     },
     isNewest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isOldest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   setup(props, { emit }) {
     /**
@@ -84,32 +84,32 @@ export default defineComponent({
     useKeyDown([
       {
         key: "r",
-        fn: toggleRead
+        fn: toggleRead,
       },
       {
         key: "e",
-        fn: toggleArchive
+        fn: toggleArchive,
       },
       {
         key: "j",
-        fn: goNewer
+        fn: goNewer,
       },
       {
         key: "k",
-        fn: goOlder
+        fn: goOlder,
       },
       {
         key: "[",
-        fn: goNewerAndArchive
+        fn: goNewerAndArchive,
       },
       {
         key: "]",
-        fn: goOlderAndArchive
+        fn: goOlderAndArchive,
       },
       {
         key: "Escape",
-        fn: closeModal
-      }
+        fn: closeModal,
+      },
     ]);
 
     return {
@@ -117,8 +117,8 @@ export default defineComponent({
       toggleArchive,
       goNewer,
       goOlder,
-      closeModal
+      closeModal,
     };
-  }
+  },
 });
 </script>
