@@ -4,9 +4,7 @@
     <h3>{{ emailSelection.emails.size }} of {{ filteredEmails.length }} emails selected</h3>
 
     <div>
-      <button :disabled="selectedScreen == 'inbox'" @click="selectScreen('inbox')">
-        Inbox
-      </button>
+      <button :disabled="selectedScreen == 'inbox'" @click="selectScreen('inbox')">Inbox</button>
       <button :disabled="selectedScreen == 'archived'" @click="selectScreen('archived')">
         Archived
       </button>
@@ -70,24 +68,24 @@ import MailView from "../MailView/index.vue";
 import ModalView from "../ModalView/index.vue";
 import BulkActionBar from "../BulkActionBar/index.vue";
 import useEmailSelection from "../../composables/use-email-selection";
-import type { Email} from '@/types'
+import type { Email } from "@/types";
 
 export default defineComponent({
   // TODO
   props: {
     emails: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     loading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   components: {
     MailView,
     ModalView,
-    BulkActionBar
+    BulkActionBar,
   },
   setup(props) {
     const emailSelection = useEmailSelection();
@@ -97,16 +95,16 @@ export default defineComponent({
      */
     const selectedScreen = ref<string>("inbox");
 
-    const selectScreen = newScreen => {
+    const selectScreen = (newScreen: string) => {
       // clear the selections from the previous screen
       emailSelection.emails.clear();
       selectedScreen.value = newScreen;
     };
-    const filteredEmails = computed(():Email[] => {
+    const filteredEmails = computed((): Email[] => {
       if (selectedScreen.value == "inbox") {
-        return props.emails.filter(email:Email => !email.archived);
+        return props.emails.filter((email) => !email.archived);
       } else {
-        return props.emails.filter(email:Email => email.archived);
+        return props.emails.filter((email) => email.archived);
       }
     });
 
@@ -119,7 +117,7 @@ export default defineComponent({
 
     const openedEmail = ref(null);
     const openedEmailIndex = computed(() =>
-      props.emails.findIndex(item => item.id === openedEmail.value?.id)
+      props.emails.findIndex((item) => item.id === openedEmail.value?.id)
     );
 
     function openModal(email) {
@@ -183,7 +181,7 @@ export default defineComponent({
     watch(
       () => openedEmailIndex.value,
 
-      value => {
+      (value) => {
         if (!openedEmailIndex.value) {
           isNewest.value = true;
 
@@ -208,8 +206,8 @@ export default defineComponent({
       emailSelection,
       filteredEmails,
       selectedScreen,
-      selectScreen
+      selectScreen,
     };
-  }
+  },
 });
 </script>

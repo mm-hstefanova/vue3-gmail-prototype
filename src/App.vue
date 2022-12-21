@@ -9,37 +9,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import MailTableView from "./components/MailTableView/index.vue";
 import axios from "axios";
 import useEmailSelection from "./composables/use-email-selection";
-import type { Email} from '@/types'
+import type { Email } from "@/types";
 
 type DataShape = {
-  emails: Email[]
-  loading: boolean
-}
+  emails: Email[];
+  loading: boolean;
+};
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
-    MailTableView
+    MailTableView,
   },
   // TODO: typescript - composable
   setup() {
     return { emailSelection: useEmailSelection() };
   },
-  data():DataShape {
+  data(): DataShape {
     return {
       emails: [],
-      loading: false
+      loading: false,
     };
   },
   computed: {
-    sortedEmails():Email[] {
+    sortedEmails(): Email[] {
       return this.emails.sort((a, b) => {
         return a.sentAt < b.sentAt ? 1 : -1;
       });
-    }
+    },
   },
   methods: {
     async getData() {
@@ -47,13 +47,13 @@ export default defineComponent({
 
       let response = axios
         .get("https://api.jsonbin.io/v3/qs/6391ebf4962da34f538ab0b5")
-        .then(res => (this.emails = res.data.record.emails));
+        .then((res) => (this.emails = res.data.record.emails));
       this.loading = false;
-    }
+    },
   },
   mounted() {
     this.getData();
-  }
+  },
 });
 </script>
 
