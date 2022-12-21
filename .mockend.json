@@ -2,30 +2,30 @@
     "Email": {
         "from": {
             "regexp": "[a-z]{5,10}@[a-z]{5}\\.[a-z]{2,3}"
-        }
-    },
-    "subject": {
-        "loremWords": {
-            "minLength": 5,
-            "maxLength": 20
-        }
-    },
-    "body": {
-        "loremParagraphs": {
-            "minLength": 10,
-            "maxLength": 100
-        }
-    },
-    "archived": {
-        "boolean": {}
-    },
-    "read": {
-        "boolean": {}
-    },
-    "sentAt": {
-        "dateTime": {
-            "min": "2021-01-01T00:00:00Z",
-            "max": "2022-12-31T23:59:59Z"
+        },
+        "subject": {
+            "loremWords": {
+                "minLength": 5,
+                "maxLength": 20
+            }
+        },
+        "body": {
+            "loremParagraphs": {
+                "minLength": 10,
+                "maxLength": 100
+            }
+        },
+        "archived": {
+            "boolean": {}
+        },
+        "read": {
+            "boolean": {}
+        },
+        "sentAt": {
+            "dateTime": {
+                "min": "2021-01-01T00:00:00Z",
+                "max": "2022-12-31T23:59:59Z"
+            }
         }
     }
 }
